@@ -65,3 +65,18 @@ function sendData( $, url, param, options ){
                     .submit()
                     .remove();
 }
+
+/**
+//Usage
+sendData( jQuery, "view.jsp"
+, {
+    "boardType": "free"
+    , "id": 50
+}
+, {
+    "type": "popup"
+    , "target": "boardView"
+    , "width": 900
+    , "height": 600 
+});
+/**/
