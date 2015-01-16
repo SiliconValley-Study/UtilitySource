@@ -2,7 +2,7 @@
  * String 형태의 URL 을 Object 로 변환하는 함수
 /**/
 function param2json( strParam ){
-    if( typeof strParam !== "string" ) return strParam;
+    if( typeof strParam !== "string" ) return strParam || {};
 
     var params = strParam.split( "&" )
         , obj = {};
