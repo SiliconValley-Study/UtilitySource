@@ -1,7 +1,7 @@
 /**
  * String 형태의 URL 을 Object 로 변환하는 함수
 /**/
-function param2json( strParam ){
+function param2obj( strParam ){
     if( typeof strParam !== "string" ) return strParam || {};
 
     var params = strParam.split( "&" )
@@ -35,18 +35,20 @@ function param2json( strParam ){
 function sendData( $, url, param, options ){
     if( !url || !$ instanceof Object || !$.prototype.jquery ) return; //TODO. jQuery 없이도 동작할 수 있도록 변경 해야 함
 
-    param = param2json( param );
-    options = param2json( options );
+    param = param2obj( param );
+    options = param2obj( options );
 
     if( typeof param !== "object" ) return;
 
-    var formId = "testForm" + new Date().getTime()
+    var time = new Date().getTime()
+        , formId = "testForm" + time
         , formSelector = "#" + formId
+        , isPopup = options.type === "popup"
         , method = options.method || "post"
-        , target = options.target || ""
+        , target = options.target || ( isPopup ? "popup" + time : "" ) //전송 타겟이 팝업일때 타겟명이 없는 경우 팝업창을 계속 생성 하게 된다.
         , textHTML = [ "<form id=\"", formId, "\" method=\"" + method + "\" target=\"" + target + "\" action=\"", url, "\">" ];
 
-    if( options.type === "popup" ){
+    if( isPopup ){
         var width = options.width || 600
             , height = options.height || 500
             , top = options.top || screen.availWidth / 2 - ( width / 2 )
@@ -60,7 +62,7 @@ function sendData( $, url, param, options ){
         textHTML[ textHTML.length ] = "<input type=\"hidden\" name=\"" + li + "\" value=\"" + param[ li ] + "\" />";
 
     textHTML[ textHTML.length ] = "</form>";
-    $( "body" ).append( textHTML.join("") ); //TODO. jQuery 없을 때 native code 로 처리 하는 로직 추가 해야함
+    $( "body" ).append( textHTML.join("") ); //TODO. jQuery 없을 때 native code 로 처리 하는 로직 추가 해야 함
     $( formSelector )
                     .submit()
                     .remove();
